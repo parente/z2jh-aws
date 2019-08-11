@@ -1,0 +1,40 @@
+repositories:
+  - name: jupyterhub
+    url: https://jupyterhub.github.io/helm-chart
+
+releases:
+  - name: jhub
+    chart: jupyterhub/jupyterhub
+    version: 0.9-dcde99a 
+    namespace: jupyterhub
+    values:
+      - proxy:
+          secretToken: {{ requiredEnv "JUPYTERHUB_TOKEN" }}
+        singleuser:
+          defaultUrl: "/lab"
+          image:
+            name: {{ env "USER_IMAGE" | default "jupyter/minimal-notebook" }} 
+            tag: {{ env "USER_IMAGE_TAG" | default "307ad2bb5fce" }}
+        hub:
+          image:
+            name: {{ env "HUB_IMAGE" | default "jupyterhub/k8s-hub"}}
+            tag: {{ env "HUB_IMAGE_TAG" | default "0.9-dcde99a" }}
+        auth:
+          type: custom
+          admin:
+            users:
+              - admin
+          custom:
+            className: "firstuseauthenticator.FirstUseAuthenticator"
+            config:
+              create_users: False
+        ingress:
+          enabled: true
+          hosts:
+            - {{ env "FQDN" | default "parente.dev" }}
+          annotations:
+            kubernetes.io/tls-acme: 'true'
+          tls:
+            - hosts:
+                - {{ env "FQDN" | default "parente.dev" }}
+              secretName: jupyterhub-ingress-tls

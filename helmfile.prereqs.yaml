@@ -1,0 +1,42 @@
+repositories:
+  - name: jetstack
+    url: https://charts.jetstack.io
+
+releases:
+  - name: external-dns-cloudflare
+    chart: stable/external-dns
+    version: 1.7.9
+    namespace: external-dns-cloudflare
+    values:
+      - domainFilters: [{{ env "FQDN" | default "parente.dev" }}]
+        rbac:
+          create: true
+        txtOwnerId: z2jh-aws
+        provider: cloudflare
+        cloudflare:
+          apiKey: {{ requiredEnv "CLOUDFLARE_API_KEY" }}
+          email: {{ env "CLOUDFLARE_EMAIL" | default "parente@gmail.com" }}
+  - name: nginx-ingress
+    chart: stable/nginx-ingress
+    version: 1.6.16
+    namespace: nginx-ingress
+    values:
+      - rbac:
+          create: true
+        controller:
+          replicaCount: 2
+          config:
+            use-proxy-protocol: "true"
+          service:
+            annotations:
+              service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+          publishService:
+            enabled: true
+  - name: cert-manager
+    chart: jetstack/cert-manager
+    version: v0.8.1
+    namespace: cert-manager
+    values:
+      - ingressShim:
+          defaultIssuerName: letsencrypt-prod
+          defaultIssuerKind: ClusterIssuer
