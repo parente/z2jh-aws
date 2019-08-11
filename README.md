@@ -1,4 +1,4 @@
-## z2j-aws
+## z2jh-aws
 
 A take on [Zero-to-JupyterHub with Kubernetes](https://zero-to-jupyterhub.readthedocs.io/en/latest/)
 using a very specific tech stack, namely:
