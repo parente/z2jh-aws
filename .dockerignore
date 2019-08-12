@@ -1,4 +1,4 @@
 .terraform/
 output/
-*.tfstate
+*.tfstate*
 *.backup
