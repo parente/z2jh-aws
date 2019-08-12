@@ -77,10 +77,12 @@ case before continuing. Here are some alternatives:
 1. Add a site to your Cloudflare account matching your domain name (e.g., `parente.dev`).
 1. Login to your domain name registrar to configure your domain name to use the CloudFlare
    nameservers (currently, `alec.ns.cloudflare.com` and `alice.ns.cloudflare.com`).
-1. Get your CloudFlare API token from My Profile &rarr; API Tokens &rarr; Global API Key in the
-   CloudFlare web app.
-1. Apply configurations to Kubernetes for Helm tiller, nginx ingress, Let's Encrypt cert issuer, and
-   CloudFlare DNS.
+1. Back on the CloudFlare website, click the Crypto icon for your new site and change the SSL
+   dropdown to Full.
+1. Also on the CloudFlare site, get your CloudFlare API token from My Profile &rarr; API Tokens
+   &rarr; Global API Key. p.
+1. Now at the console, apply configurations to Kubernetes for Helm tiller, nginx ingress, Let's
+   Encrypt certificate issuer, and CloudFlare DNS.
 
    ```shell
    export FQDN=parente.dev
@@ -89,7 +91,8 @@ case before continuing. Here are some alternatives:
    make k8s-services
    ```
 
-1. Deploy JupyterHub configured to use the `jupyter/minimal-notebook` and
+1. Deploy JupyterHub configured to use the `jupyter/minimal-notebook` Docker image from
+   [jupyter/docker-stacks](https://github.com/jupyter/docker-stacks) and
    [FirstUseAuthenticator](https://github.com/jupyterhub/firstuseauthenticator).
 
    ```shell
@@ -150,7 +153,8 @@ make jupyterhub USER_IMAGE=jupyter/datascience-notebook USER_IMAGE_TAG=2ce7c06a6
 
 ### Use a different method of authentication
 
-Modify the `auth` section
+Modify the `auth` section in `helmfile.yaml` based on the guidance in the
+[Authentication section of Zero to JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest/authentication.html).
 
 ### Use a different DNS, Kubernetes, TLS, etc. provider
 
